@@ -1,2 +1,2 @@
 # aprendiendo-github-alfred
-Prueba de Aprendizaje
+Este repositorio hace parte de mi proceso para convertirme en experto en GitHub.
