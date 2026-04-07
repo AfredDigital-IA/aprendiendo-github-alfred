@@ -1,2 +1,2 @@
 # aprendiendo-github-alfred
-Este repositorio hace parte de mi proceso para convertirme en experto en GitHub.
+Estoy trabajando en una nueva rama sin afectar la principal
