@@ -155,122 +155,6 @@
       overflow: hidden;
     }
 
-    .hero-cover {
-      min-height: calc(100vh - 130px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        linear-gradient(135deg, rgba(15, 23, 42, 0.76), rgba(29, 78, 216, 0.72)),
-        url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-      padding: 48px 38px 96px;
-    }
-
-    .cover-overlay {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 28%), radial-gradient(circle at bottom left, rgba(56,189,248,0.22), transparent 24%);
-      pointer-events: none;
-    }
-
-    .cover-content {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 900px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .cover-content h2 {
-      margin: 0 0 14px;
-      font-size: clamp(2.4rem, 5vw, 4.6rem);
-      line-height: 1;
-    }
-
-    .cover-welcome {
-      max-width: 760px;
-      font-size: 1.08rem;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.92);
-      margin-bottom: 24px;
-    }
-
-    .cover-speakers {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-
-    .cover-speakers span {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 999px;
-      padding: 10px 16px;
-      font-weight: 700;
-      backdrop-filter: blur(10px);
-    }
-
-    .cover-enter-btn {
-      padding: 16px 28px;
-      border-radius: 999px;
-      font-size: 1rem;
-      box-shadow: 0 18px 30px rgba(15,23,42,0.2);
-    }
-
-    .cover-footer {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1;
-      padding: 18px 24px;
-      background: linear-gradient(180deg, rgba(15,23,42,0), rgba(15,23,42,0.55));
-    }
-
-    .cover-footer-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .cover-footer-text {
-      color: rgba(255,255,255,0.82);
-      line-height: 1.6;
-      max-width: 720px;
-      font-size: 0.94rem;
-    }
-
-    .bancolombia-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-weight: 800;
-      backdrop-filter: blur(10px);
-    }
-
-    .logo-shape {
-      width: 10px;
-      height: 18px;
-      border-radius: 3px;
-      display: inline-block;
-    }
-
-    .logo-shape.yellow { background: #facc15; }
-    .logo-shape.blue { background: #2563eb; }
-    .logo-shape.red { background: #ef4444; }
-    .logo-shape.green { background: #22c55e; }
-
     .hero::after {
       content: "";
       position: absolute;
@@ -771,7 +655,6 @@
       }
 
       .hero,
-      .hero-cover,
       .question-card,
       .result-card,
       .info-card,
@@ -779,20 +662,6 @@
       .exercise-card,
       .activity-card {
         padding: 20px;
-      }
-
-      .hero-cover {
-        min-height: calc(100vh - 110px);
-        padding-bottom: 110px;
-      }
-
-      .cover-footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .cover-content h2 {
-        line-height: 1.08;
       }
 
       .score-row {
@@ -833,30 +702,26 @@
 
       <main>
         <section id="home" class="page active">
-          <div class="hero hero-cover">
-            <div class="cover-overlay"></div>
-            <div class="cover-content">
-              <div class="eyebrow">Bienvenido a esta experiencia de aprendizaje</div>
-              <h2>Liderando con IA</h2>
-              <p class="cover-welcome">
-                Descubre cómo aprendes, cómo lideras y cómo la inteligencia artificial puede convertirse en una aliada real para decidir mejor, comunicar mejor y generar más impacto.
-              </p>
-              <div class="cover-speakers">
-                <span>Diego Ibañez Garcia</span>
-                <span>Alfredo Beltrán Torres</span>
-              </div>
-              <button class="btn primary cover-enter-btn" id="enterWorkshopBtn">Entrar al taller</button>
-            </div>
-            <div class="cover-footer">
-              <div class="cover-footer-inner">
-                <span class="cover-footer-text">Una experiencia creada para líderes que quieren usar la IA con criterio, humanidad y estrategia.</span>
-                <div class="bancolombia-logo" aria-label="Logo Bancolombia">
-                  <span class="logo-shape yellow"></span>
-                  <span class="logo-shape blue"></span>
-                  <span class="logo-shape red"></span>
-                  <span class="logo-shape green"></span>
-                  <strong>Bancolombia</strong>
+          <div class="hero">
+            <div class="hero-grid">
+              <div>
+                <div class="eyebrow">✨ Módulo 1 · Autoconocimiento aplicado</div>
+                <h2>No todos lideramos igual. Tampoco deberíamos usar la IA igual.</h2>
+                <p>
+                  Este espacio fue diseñado para ayudarte a descubrir cómo aprendes, cómo tomas decisiones y cómo puedes usar la inteligencia artificial de una forma más estratégica, más consciente y mucho más efectiva.
+                </p>
+                <div class="pill-row">
+                  <span class="pill">Test interactivo</span>
+                  <span class="pill">Resultado personalizado</span>
+                  <span class="pill">Prompts útiles</span>
+                  <span class="pill">Ejercicios prácticos</span>
                 </div>
+              </div>
+              <div class="hero-quote">
+                <h3>Idea fuerza del taller</h3>
+                <p>
+                  La IA no reemplaza tu criterio como líder. Lo desafía, lo amplifica y te obliga a pensar mejor. Entre mejor te conozcas, mejor la vas a usar.
+                </p>
               </div>
             </div>
           </div>
@@ -1572,14 +1437,8 @@ Necesito:
     updateProgress();
     renderQuestion();
     renderResult();
-
-    const enterWorkshopBtn = document.getElementById('enterWorkshopBtn');
-    if (enterWorkshopBtn) {
-      enterWorkshopBtn.addEventListener('click', () => {
-        document.querySelector('.section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
   </script>
 </body>
 </html>
+
 
