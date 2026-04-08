@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liderando con IA</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --primary: #1d4ed8;
+      --primary-dark: #1e3a8a;
+      --secondary: #0f172a;
+      --muted: #64748b;
+      --border: #dbe4f0;
+      --success: #047857;
+      --warning: #b45309;
+      --danger: #b91c1c;
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 40%, #f4f7fb 100%);
+      color: var(--secondary);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, #38bdf8 100%);
+      color: white;
+      font-size: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-copy h1 {
+      font-size: 1.1rem;
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .brand-copy p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn,
+    .btn,
+    .answer-btn,
+    .activity-btn {
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+    }
+
+    .nav-btn:hover,
+    .btn:hover,
+    .answer-btn:hover,
+    .activity-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border);
+      color: var(--secondary);
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .nav-btn.active {
+      background: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.98), rgba(15, 23, 42, 0.95));
+      color: white;
+      border-radius: var(--radius-xl);
+      padding: 38px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      right: -80px;
+      top: -100px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+    }
+
+    .hero h2 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1.02;
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 680px;
+      font-size: 1.06rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .hero-quote {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      align-self: start;
+    }
+
+    .hero-quote h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .hero-quote p {
+      margin: 0;
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .card,
+    .activity-card,
+    .info-card,
+    .result-card,
+    .exercise-card,
+    .prompt-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .activity-card {
+      padding: 24px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 220px;
+    }
+
+    .activity-card .icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+    }
+
+    .activity-card h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .activity-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .activity-btn {
+      align-self: flex-start;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--secondary);
+      color: white;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .section-header h3 {
+      margin: 0;
+      font-size: 1.45rem;
+    }
+
+    .section-header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 760px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .info-card {
+      padding: 24px;
+    }
+
+    .info-card h4 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+
+    .info-card p,
+    .info-card li,
+    .result-card li,
+    .exercise-card li,
+    .prompt-card li {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .info-card ul,
+    .result-card ul,
+    .exercise-card ul,
+    .prompt-card ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .test-shell {
+      display: grid;
+      grid-template-columns: 0.95fr 1.25fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sticky-card {
+      position: sticky;
+      top: 24px;
+      padding: 24px;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #e5edf7;
+      overflow: hidden;
+      margin: 16px 0 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), #38bdf8);
+      transition: width 0.25s ease;
+    }
+
+    .small-muted {
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.6;
+    }
+
+    .question-card {
+      padding: 28px;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      flex-wrap: wrap;
+    }
+
+    .question-title {
+      margin: 0 0 20px;
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      line-height: 1.3;
+    }
+
+    .answers {
+      display: grid;
+      gap: 14px;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      padding: 18px 18px 18px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .answer-btn:hover {
+      background: #eef4ff;
+      border-color: #bfd2ff;
+      box-shadow: 0 10px 20px rgba(29, 78, 216, 0.08);
+    }
+
+    .answer-letter {
+      min-width: 38px;
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: white;
+      color: var(--primary-dark);
+      font-weight: 800;
+      border: 1px solid var(--border);
+    }
+
+    .answer-text {
+      line-height: 1.6;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    .question-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-weight: 700;
+    }
+
+    .btn.primary {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .btn.secondary {
+      background: white;
+      color: var(--secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .result-card {
+      padding: 26px;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .result-title {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+    }
+
+    .result-quote {
+      margin: 0;
+      font-size: 1.06rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .scores-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 44px;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+
+    .score-track {
+      height: 12px;
+      border-radius: 999px;
+      background: #e8eef8;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      transition: width 0.45s ease;
+    }
+
+    .score-fill.divergente { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .score-fill.asimilador { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+    .score-fill.convergente { background: linear-gradient(90deg, #dc2626, #fb7185); }
+    .score-fill.acomodador { background: linear-gradient(90deg, #059669, #34d399); }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .result-block h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .result-block p,
+    .result-block li {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f8fbff, #eef4ff);
+      border: 1px solid #cfe0ff;
+    }
+
+    .prompt-grid,
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .prompt-card,
+    .exercise-card {
+      padding: 24px;
+    }
+
+    .prompt-card code {
+      display: block;
+      white-space: pre-wrap;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #0f172a;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      border-radius: 999px;
+      color: var(--secondary);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.7;
+      padding-bottom: 20px;
+    }
+
+    .empty-state {
+      padding: 38px;
+      text-align: center;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 18px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-4,
+      .result-grid,
+      .prompt-grid,
+      .exercise-grid,
+      .hero-grid,
+      .result-hero,
+      .test-shell,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .sticky-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app-shell {
+        padding: 16px;
+      }
+
+      .hero,
+      .question-card,
+      .result-card,
+      .info-card,
+      .prompt-card,
+      .exercise-card,
+      .activity-card {
+        padding: 20px;
+      }
+
+      .score-row {
+        grid-template-columns: 1fr;
+      }
+
+      
+.nav-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 botones por fila */
+  gap: 10px;
+}
+
+.nav-btn {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+
+  /* opcional pero recomendado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="container">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-badge">🧠</div>
+          <div class="brand-copy">
+            <h1>Liderando con IA</h1>
+            <p>Taller práctico para aprender, liderar y decidir mejor</p>
+            
+          </div>
+        </div>
+          <div class="nav-actions">
+          <button class="nav-btn" data-page-target="home">Inicio</button>
+          <button class="nav-btn" data-page-target="test">Test Interactivo</button>
+          <button class="nav-btn" data-page-target="result">Mi resultado</button>
+          <button class="nav-btn" data-page-target="leadership">Liderazgo + IA</button>
+          <button class="nav-btn" data-page-target="exercises">Ejercicios</button>
+         </div>
+
+        <p>"Liderazgo que Transforma: Una experiencia de Diego Ibañez y Alfredo Beltrán para los líderes del 2030."</p>
+      </header>
+
+      <main>
+        <section id="home" class="page active">
+          <div class="hero">
+            <div class="hero-grid">
+              <div>
+                <div class="eyebrow">✨ Módulo 1 · Autoconocimiento aplicado</div>
+                <h2>No todos lideramos igual. Tampoco deberíamos usar la IA igual.</h2>
+                <p>
+                  Este espacio fue diseñado para ayudarte a descubrir cómo aprendes, cómo tomas decisiones y cómo puedes usar la inteligencia artificial de una forma más estratégica, más consciente y mucho más efectiva.
+                </p>
+
+                
+                <!-- <div class="pill-row">
+                  <span class="pill">Test interactivo</span>
+                  <span class="pill">Resultado personalizado</span>
+                  <span class="pill">Prompts útiles</span>
+                  <span class="pill">Ejercicios prácticos</span>
+                </div> -->
+
+                
+              </div>
+              <div class="hero-quote">
+                <h3>Idea fuerza del taller</h3>
+                <p>
+                  La IA no reemplaza tu criterio como líder. Lo desafía, lo amplifica y te obliga a pensar mejor. Entre mejor te conozcas, mejor la vas a usar.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <div>
+                <h3>Explora las actividades</h3>
+                <p>La página está pensada como una experiencia. Iniciaras con el test interactivo, luego pasaras a interpretar tu resultado, aterrízalo con IA y finalmente una sección de ejercicios practicos.</p>
+              </div>
+            </div>
+
+            <div class="grid-4">
+              <article class="activity-card" data-go="test">
+                <div class="icon">📝</div>
+                <h3>Test de estilo de aprendizaje</h3>
+                <p>Descubre tu estilo predominante a partir de situaciones reales de liderazgo, decisión y trabajo en equipo.</p>
+                <button class="activity-btn">Empezar</button>
+              </article>
+
+              <article class="activity-card" data-go="result">
+                <div class="icon">📊</div>
+                <h3>Mi resultado</h3>
+                <p>Revisa tu perfil, fortalezas, riesgos, prompts sugeridos y el punto que más necesitas desarrollar.</p>
+                <button class="activity-btn">Ver resultado</button>
+              </article>
+
+              <article class="activity-card" data-go="leadership">
+                <div class="icon">🤖</div>
+                <h3>Liderazgo + IA</h3>
+                <p>Aprende a convertir la IA en un copiloto útil para comunicar mejor, decidir mejor y ejecutar mejor.</p>
+                <button class="activity-btn">Explorar</button>
+              </article>
+
+              <article class="activity-card" data-go="exercises">
+                <div class="icon">🚀</div>
+                <h3>Ejercicios prácticos</h3>
+                <p>Lleva tu estilo a la acción con un reto diseñado para que no te quedes solo en teoría.</p>
+                <button class="activity-btn">Practicar</button>
+              </article>
+            </div>
+          </div>
+
+          <div class="section two-col">
+            <article class="info-card">
+              <h4>¿Qué vas a vivir aquí?</h4>
+              <ul>
+                <li>Un test breve, claro y retador.</li>
+                <li>Un resultado con interpretación útil, no genérica.</li>
+                <li>Prompts pensados según tu manera de aprender y liderar.</li>
+                <li>Ejercicios para fortalecer lo que hoy puede jugarte en contra.</li>
+              </ul>
+            </article>
+
+            <article class="info-card">
+              <h4>Antes de comenzar</h4>
+              <ul>
+                <li>Responde pensando en lo que realmente haces.</li>
+                <li>No intentes “quedar bien”. Aquí gana la honestidad.</li>
+                <li>Tu resultado no es una etiqueta; es un espejo.</li>
+                <li>La meta no es cambiar tu estilo, sino volverlo más completo.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="test" class="page">
+          <div class="section-header">
+            <div>
+              <h3>Test: ¿Cómo aprendes, decides y lideras?</h3>
+              <p>Responde con honestidad. No hay respuestas buenas o malas. Lo que importa es que esto se parezca a ti de verdad.</p>
+            </div>
+          </div>
+
+          <div class="test-shell">
+            <aside class="card sticky-card">
+              <div class="eyebrow">Tu avance</div>
+              <h3 style="margin:0 0 6px;">Completa el test</h3>
+              <p class="small-muted">Son 12 preguntas. Te tomará menos de 5 minutos y el resultado se genera de inmediato.</p>
+              <div class="progress-wrap">
+                <div id="progressBar" class="progress-bar"></div>
+              </div>
+              <p id="progressText" class="small-muted">Pregunta 1 de 12</p>
+              <hr style="border:none; border-top:1px solid var(--border); margin:18px 0;">
+              <p class="small-muted">
+                <strong>Tip:</strong> responde pensando en situaciones reales: un cliente difícil, una decisión apretada, una reunión con tensión o un problema en tu equipo.
+              </p>
+              <div class="pill-row">
+                <span class="pill">Divergente</span>
+                <span class="pill">Asimilador</span>
+                <span class="pill">Convergente</span>
+                <span class="pill">Acomodador</span>
+              </div>
+            </aside>
+
+            <section id="questionContainer" class="card question-card"></section>
+          </div>
+        </section>
+
+        <section id="result" class="page">
+          <div id="resultContent"></div>
+        </section>
+
+        <section id="leadership" class="page">
+          <div class="section-header">
+            <div>
+              <h3>Liderazgo + IA</h3>
+              <p>Aquí está la esencia del taller: no usar la IA como todo el mundo, sino usarla de una forma más inteligente según tu estilo de aprendizaje y de liderazgo.</p>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <article class="info-card">
+              <h4>3 errores comunes al usar IA</h4>
+              <ul>
+                <li>Pedir respuestas rápidas sin contexto suficiente.</li>
+                <li>Usarla solo para ahorrar tiempo, pero no para pensar mejor.</li>
+                <li>No cuestionar lo que responde ni contrastarlo con criterio.</li>
+              </ul>
+            </article>
+
+            <article class="info-card">
+              <h4>3 usos potentes de la IA para líderes</h4>
+              <ul>
+                <li>Preparar conversaciones complejas con clientes o equipos.</li>
+                <li>Priorizar opciones y ver riesgos que no estás viendo.</li>
+                <li>Convertir ideas, datos o reuniones en planes de acción.</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="section two-col">
+            <article class="prompt-card">
+              <h4>Prompt marco para decisiones</h4>
+              <p>Úsalo cuando necesites criterio, no solo velocidad.</p>
+              <code>Actúa como un líder estratégico. Analiza este caso: [pega el caso].
+Dame:
+1. El problema principal.
+2. Tres opciones de acción.
+3. Riesgos de cada opción.
+4. La recomendación más sólida y por qué.</code>
+            </article>
+
+            <article class="prompt-card">
+              <h4>Prompt marco para reuniones</h4>
+              <p>Úsalo para preparar conversaciones con clientes, comerciales o constructoras.</p>
+              <code>Ayúdame a preparar una conversación de liderazgo.
+Contexto: [explica el contexto].
+Necesito:
+1. Objetivo de la conversación.
+2. Mensaje central.
+3. Preguntas clave.
+4. Posibles objeciones.
+5. Una forma de cerrar con claridad.</code>
+            </article>
+          </div>
+
+          <div class="section">
+            <article class="info-card highlight">
+              <h4>Mensaje clave para el taller</h4>
+              <p>
+                Un usuario promedio usa IA para responder más rápido. Un líder la usa para pensar mejor, decidir mejor y generar conversaciones de más valor.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="exercises" class="page">
+          <div class="section-header">
+            <div>
+              <h3>Ejercicios prácticos</h3>
+              <p>El objetivo no es quedarte en un diagnóstico. El objetivo es que empieces a entrenar el músculo que más necesitas fortalecer.</p>
+            </div>
+          </div>
+
+          <div class="exercise-grid">
+            <article class="exercise-card">
+              <h4>🟡 Divergente · Reto de priorización</h4>
+              <ul>
+                <li>Piensa en una situación donde hoy tengas demasiadas opciones abiertas.</li>
+                <li>Pídele a la IA que te ayude a priorizar por impacto y facilidad.</li>
+                <li>Toma una decisión concreta antes de cerrar el ejercicio.</li>
+              </ul>
+            </article>
+
+            <article class="exercise-card">
+              <h4>🔵 Asimilador · Reto de simplificación</h4>
+              <ul>
+                <li>Toma un tema complejo que estés analizando.</li>
+                <li>Pide a la IA que lo traduzca en 3 decisiones y 5 acciones.</li>
+                <li>Comparte la versión simple con alguien de tu equipo.</li>
+              </ul>
+            </article>
+
+            <article class="exercise-card">
+              <h4>🔴 Convergente · Reto de perspectiva</h4>
+              <ul>
+                <li>Piensa en una decisión que ya quieras cerrar.</li>
+                <li>Pídele a la IA que te muestre 3 riesgos y 2 perspectivas contrarias.</li>
+                <li>Ajusta tu decisión con una mirada más amplia.</li>
+              </ul>
+            </article>
+
+            <article class="exercise-card">
+              <h4>🟢 Acomodador · Reto de estructura</h4>
+              <ul>
+                <li>Piensa en una acción que quieras ejecutar esta semana.</li>
+                <li>Pide a la IA que te la convierta en un plan con pasos, tiempos y validaciones.</li>
+                <li>Ejecuta solo después de revisar la estructura.</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="section">
+            <article class="info-card highlight">
+              <h4>Regla del módulo</h4>
+              <p>Tu estilo te da fuerza. Tu crecimiento empieza cuando dejas de usar solo tu fortaleza y entrenas lo que normalmente evitas.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div class="footer-note">
+         Taller <strong>Liderando con IA</strong>. | © 2026 AlfredDigital-IA
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        text: 'Tienes un cliente que lleva semanas sin decidir. ¿Qué haces?',
+        answers: [
+          { letter: 'A', text: 'Busco entender qué siente o qué lo está frenando realmente', style: 'divergente' },
+          { letter: 'B', text: 'Analizo toda la información para identificar la mejor opción', style: 'asimilador' },
+          { letter: 'C', text: 'Le presento una solución concreta para que avance', style: 'convergente' },
+          { letter: 'D', text: 'Cambio la estrategia y pruebo una nueva forma de abordarlo', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 2,
+        text: 'Cuando enfrentas un problema nuevo en el trabajo, tu primer impulso es:',
+        answers: [
+          { letter: 'A', text: 'Escuchar diferentes puntos de vista antes de actuar', style: 'divergente' },
+          { letter: 'B', text: 'Entender bien el problema antes de intervenir', style: 'asimilador' },
+          { letter: 'C', text: 'Buscar una solución práctica rápidamente', style: 'convergente' },
+          { letter: 'D', text: 'Probar algo y ajustar sobre la marcha', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 3,
+        text: 'En una reunión donde hay desacuerdo, tú sueles:',
+        answers: [
+          { letter: 'A', text: 'Escuchar a todos y tratar de entender cada postura', style: 'divergente' },
+          { letter: 'B', text: 'Organizar los argumentos para encontrar coherencia', style: 'asimilador' },
+          { letter: 'C', text: 'Enfocar la conversación hacia una decisión', style: 'convergente' },
+          { letter: 'D', text: 'Proponer probar una alternativa y ver qué pasa', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 4,
+        text: 'Cuando aprendes algo nuevo, prefieres:',
+        answers: [
+          { letter: 'A', text: 'Ver ejemplos y entender experiencias reales', style: 'divergente' },
+          { letter: 'B', text: 'Leer, analizar y comprender la lógica detrás', style: 'asimilador' },
+          { letter: 'C', text: 'Aplicarlo directamente en un caso concreto', style: 'convergente' },
+          { letter: 'D', text: 'Experimentar y aprender haciendo', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 5,
+        text: 'Si algo no está funcionando en tu equipo, lo primero que haces es:',
+        answers: [
+          { letter: 'A', text: 'Hablar con las personas para entender qué está pasando', style: 'divergente' },
+          { letter: 'B', text: 'Analizar datos o información antes de actuar', style: 'asimilador' },
+          { letter: 'C', text: 'Tomar decisiones para corregir rápidamente', style: 'convergente' },
+          { letter: 'D', text: 'Probar cambios inmediatos y ver resultados', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 6,
+        text: 'Cuando tienes que tomar una decisión importante:',
+        answers: [
+          { letter: 'A', text: 'Consideras cómo impacta a las personas', style: 'divergente' },
+          { letter: 'B', text: 'Evalúas toda la información disponible', style: 'asimilador' },
+          { letter: 'C', text: 'Buscas la opción más efectiva y directa', style: 'convergente' },
+          { letter: 'D', text: 'Tomas acción y ajustas en el camino', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 7,
+        text: 'En tu rol como líder, te reconocen más por:',
+        answers: [
+          { letter: 'A', text: 'Tu capacidad de entender a las personas', style: 'divergente' },
+          { letter: 'B', text: 'Tu forma de estructurar y analizar', style: 'asimilador' },
+          { letter: 'C', text: 'Tu enfoque en resultados', style: 'convergente' },
+          { letter: 'D', text: 'Tu capacidad de actuar y mover las cosas', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 8,
+        text: 'Cuando alguien de tu equipo comete un error:',
+        answers: [
+          { letter: 'A', text: 'Buscas entender qué pasó desde su perspectiva', style: 'divergente' },
+          { letter: 'B', text: 'Analizas la causa del error', style: 'asimilador' },
+          { letter: 'C', text: 'Te enfocas en corregirlo rápido', style: 'convergente' },
+          { letter: 'D', text: 'Aprovechas para probar una nueva forma de hacer las cosas', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 9,
+        text: 'Cuando tienes mucha información, tú:',
+        answers: [
+          { letter: 'A', text: 'La contrastas con opiniones o experiencias', style: 'divergente' },
+          { letter: 'B', text: 'La organizas y la estructuras', style: 'asimilador' },
+          { letter: 'C', text: 'Te enfocas en lo útil para decidir', style: 'convergente' },
+          { letter: 'D', text: 'Tomas lo necesario y actúas', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 10,
+        text: 'Frente a un nuevo proyecto, tu enfoque inicial es:',
+        answers: [
+          { letter: 'A', text: 'Entender el contexto y a las personas involucradas', style: 'divergente' },
+          { letter: 'B', text: 'Diseñar un plan estructurado', style: 'asimilador' },
+          { letter: 'C', text: 'Definir rápidamente qué hay que hacer', style: 'convergente' },
+          { letter: 'D', text: 'Arrancar y ajustar sobre la marcha', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 11,
+        text: 'Cuando alguien te propone una idea nueva:',
+        answers: [
+          { letter: 'A', text: 'Piensas en diferentes posibilidades y escenarios', style: 'divergente' },
+          { letter: 'B', text: 'Analizas si tiene lógica y sustento', style: 'asimilador' },
+          { letter: 'C', text: 'Evalúas si funciona en la práctica', style: 'convergente' },
+          { letter: 'D', text: 'Te dan ganas de probarla de inmediato', style: 'acomodador' }
+        ]
+      },
+      {
+        id: 12,
+        text: 'Si tuvieras que mejorar como líder, sientes que deberías:',
+        answers: [
+          { letter: 'A', text: 'Ser más empático o escuchar más', style: 'divergente' },
+          { letter: 'B', text: 'Analizar mejor antes de actuar', style: 'asimilador' },
+          { letter: 'C', text: 'Ser más decisivo', style: 'convergente' },
+          { letter: 'D', text: 'Pensar un poco más antes de actuar', style: 'acomodador' }
+        ]
+      }
+    ];
+
+    const stylesContent = {
+      divergente: {
+        name: 'Divergente',
+        icon: '🟡',
+        quote: 'Ves lo que otros no ven… pero a veces te cuesta decidir.',
+        summary: 'Eres una persona que conecta, escucha, observa y tiene una gran capacidad para leer contextos. Sueles entender bien a las personas y detectar matices que otros pasan por alto.',
+        strengths: ['Empatía y escucha', 'Creatividad', 'Lectura de personas y contextos', 'Capacidad para ver distintas perspectivas'],
+        risks: ['Postergar decisiones', 'Sobreanalizar', 'Abrir muchas posibilidades sin cerrar', 'Dudar más de lo necesario'],
+        aiBad: 'Usar la IA solo para explorar ideas y abrir más escenarios, sin convertir nada en decisiones concretas.',
+        aiGood: 'Usarla para priorizar, tomar decisiones y transformar ideas en acciones claras.',
+        prompts: [
+          'Dame 3 opciones y dime cuál es la mejor y por qué.',
+          'Ayúdame a priorizar estas ideas según impacto y facilidad.',
+          'Convierte esta idea en un plan de acción concreto de 5 pasos.'
+        ],
+        develop: 'Pasar de analizar a decidir. Confiar más en tu criterio y cerrar ciclos con mayor claridad.',
+        exerciseTitle: 'Reto sugerido para ti',
+        exercise: 'Toma una situación real donde hoy tengas muchas opciones abiertas. Pídele a la IA que te ayude a priorizar, elige una sola línea de acción y comprométete con un primer paso antes de terminar el ejercicio.'
+      },
+      asimilador: {
+        name: 'Asimilador',
+        icon: '🔵',
+        quote: 'Entiendes todo… pero a veces te cuesta aterrizarlo.',
+        summary: 'Eres estructurado, analítico y profundo. Das orden a la información y te gusta comprender bien antes de actuar. Eres muy valioso cuando el equipo necesita claridad y sustento.',
+        strengths: ['Pensamiento lógico', 'Capacidad de análisis', 'Organización', 'Claridad conceptual'],
+        risks: ['Quedarte en el análisis', 'Retrasar decisiones', 'Dificultad para simplificar', 'Esperar demasiado antes de actuar'],
+        aiBad: 'Usar la IA solo para entender más y más, pero no convertir lo aprendido en decisiones o acciones.',
+        aiGood: 'Usarla para simplificar, aterrizar y traducir análisis complejos en planes concretos.',
+        prompts: [
+          'Explícame esto de forma simple en 3 puntos clave.',
+          'Convierte este análisis en acciones concretas para esta semana.',
+          'Dame un plan práctico basado en esta información.'
+        ],
+        develop: 'Pasar de entender a ejecutar. Simplificar más, actuar antes y no esperar a que todo esté perfecto.',
+        exerciseTitle: 'Reto sugerido para ti',
+        exercise: 'Toma un tema complejo que estés analizando y pídele a la IA que lo traduzca en 3 decisiones y 5 acciones. Luego explícaselo a alguien de tu equipo en menos de 2 minutos.'
+      },
+      convergente: {
+        name: 'Convergente',
+        icon: '🔴',
+        quote: 'Resuelves rápido… pero a veces te saltas el proceso.',
+        summary: 'Eres práctico, resolutivo y orientado a resultados. Te mueves bien bajo presión y tienes facilidad para convertir problemas en decisiones.',
+        strengths: ['Enfoque en resultados', 'Toma de decisiones', 'Resolución de problemas', 'Practicidad'],
+        risks: ['Ir demasiado rápido', 'No escuchar suficiente', 'Saltar análisis importantes', 'Volverte impaciente con procesos más lentos'],
+        aiBad: 'Usar la IA solo para obtener respuestas rápidas sin contrastarlas ni ampliar la mirada.',
+        aiGood: 'Usarla para ver riesgos, evaluar variables adicionales y enriquecer tu criterio antes de cerrar una decisión.',
+        prompts: [
+          'Dame los riesgos que no estoy viendo en esta decisión.',
+          'Qué estoy dejando por fuera en este análisis.',
+          'Dame una perspectiva distinta a la mía y argumenta por qué podría tener sentido.'
+        ],
+        develop: 'Escuchar más, analizar antes de decidir y considerar variables que no siempre son evidentes a primera vista.',
+        exerciseTitle: 'Reto sugerido para ti',
+        exercise: 'Piensa en una decisión que ya quieras cerrar. Pide a la IA tres riesgos y dos perspectivas contrarias. Ajusta tu decisión con una mirada más completa antes de ejecutarla.'
+      },
+      acomodador: {
+        name: 'Acomodador',
+        icon: '🟢',
+        quote: 'Actúas rápido… pero a veces sin suficiente dirección.',
+        summary: 'Eres dinámico, práctico y ejecutor. Tienes energía para mover iniciativas, probar caminos y generar acción. Tu fortaleza es que haces que las cosas pasen.',
+        strengths: ['Acción', 'Adaptabilidad', 'Energía', 'Capacidad de ejecución'],
+        risks: ['Improvisar demasiado', 'Actuar sin suficiente análisis', 'Falta de estructura', 'Repetir errores por no revisar'],
+        aiBad: 'Usar la IA solo como acelerador para ejecutar rápido, sin validar suficientemente lo que vas a hacer.',
+        aiGood: 'Usarla para estructurar, validar y pensar mejor antes de actuar.',
+        prompts: [
+          'Estructura este plan antes de ejecutarlo.',
+          'Qué debería revisar antes de tomar esta decisión.',
+          'Dame los pasos correctos para hacer esto bien y sin omitir nada importante.'
+        ],
+        develop: 'Planear mejor, validar más y frenar un poco para que tu acción sea más estratégica y menos impulsiva.',
+        exerciseTitle: 'Reto sugerido para ti',
+        exercise: 'Piensa en una acción que quieras ejecutar esta semana. Pídele a la IA que la convierta en un plan con pasos, tiempos y validaciones. Luego revisa el plan antes de arrancar.'
+      }
+    };
+
+    const state = {
+      currentQuestion: 0,
+      answers: new Array(questions.length).fill(null),
+      result: null
+    };
+
+    const pageButtons = document.querySelectorAll('[data-page-target]');
+    const pages = document.querySelectorAll('.page');
+    const goCards = document.querySelectorAll('[data-go]');
+    const questionContainer = document.getElementById('questionContainer');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const resultContent = document.getElementById('resultContent');
+
+    function showPage(pageId) {
+      pages.forEach(page => page.classList.toggle('active', page.id === pageId));
+      pageButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.pageTarget === pageId));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (pageId === 'result') {
+        renderResult();
+      }
+    }
+
+    pageButtons.forEach(btn => {
+      btn.addEventListener('click', () => showPage(btn.dataset.pageTarget));
+    });
+
+    goCards.forEach(card => {
+      card.addEventListener('click', () => showPage(card.dataset.go));
+    });
+
+    function updateProgress() {
+      const current = state.currentQuestion + 1;
+      const percent = (current / questions.length) * 100;
+      progressBar.style.width = `${percent}%`;
+      progressText.textContent = `Pregunta ${current} de ${questions.length}`;
+    }
+
+    function renderQuestion() {
+      const question = questions[state.currentQuestion];
+      const savedAnswer = state.answers[state.currentQuestion];
+
+      questionContainer.innerHTML = `
+        <div class="question-meta">
+          <span>Pregunta ${state.currentQuestion + 1}</span>
+          <span>${questions.length - (state.currentQuestion + 1)} por responder después de esta</span>
+        </div>
+        <h3 class="question-title">${question.text}</h3>
+        <div class="answers">
+          ${question.answers.map(answer => `
+            <button class="answer-btn ${savedAnswer === answer.letter ? 'selected' : ''}" data-letter="${answer.letter}">
+              <span class="answer-letter">${answer.letter}</span>
+              <span class="answer-text">${answer.text}</span>
+            </button>
+          `).join('')}
+        </div>
+        <div class="question-footer">
+          <button class="btn secondary" id="prevBtn" ${state.currentQuestion === 0 ? 'disabled' : ''}>Anterior</button>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn ghost" id="resetBtn">Reiniciar</button>
+            <button class="btn primary" id="nextBtn" ${savedAnswer ? '' : 'disabled'}>${state.currentQuestion === questions.length - 1 ? 'Ver mi resultado' : 'Siguiente'}</button>
+          </div>
+        </div>
+      `;
+
+      questionContainer.querySelectorAll('.answer-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.answers[state.currentQuestion] = btn.dataset.letter;
+          renderQuestion();
+        });
+      });
+
+      document.getElementById('prevBtn').addEventListener('click', () => {
+        if (state.currentQuestion > 0) {
+          state.currentQuestion -= 1;
+          updateProgress();
+          renderQuestion();
+        }
+      });
+
+      document.getElementById('resetBtn').addEventListener('click', resetTest);
+
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        if (!state.answers[state.currentQuestion]) return;
+
+        if (state.currentQuestion < questions.length - 1) {
+          state.currentQuestion += 1;
+          updateProgress();
+          renderQuestion();
+        } else {
+          calculateResult();
+          showPage('result');
+        }
+      });
+    }
+
+    function resetTest() {
+      state.currentQuestion = 0;
+      state.answers = new Array(questions.length).fill(null);
+      state.result = null;
+      updateProgress();
+      renderQuestion();
+      localStorage.removeItem('liderandoIAResult');
+      localStorage.removeItem('liderandoIAAnswers');
+    }
+
+    function calculateResult() {
+      const counts = {
+        divergente: 0,
+        asimilador: 0,
+        convergente: 0,
+        acomodador: 0
+      };
+
+      state.answers.forEach((letter, index) => {
+        const answer = questions[index].answers.find(item => item.letter === letter);
+        if (answer) counts[answer.style] += 1;
+      });
+
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      const primary = sorted[0][0];
+      const secondary = sorted[1][0];
+
+      state.result = {
+        counts,
+        primary,
+        secondary
+      };
+
+      localStorage.setItem('liderandoIAAnswers', JSON.stringify(state.answers));
+      localStorage.setItem('liderandoIAResult', JSON.stringify(state.result));
+    }
+
+    function restoreState() {
+      const storedAnswers = localStorage.getItem('liderandoIAAnswers');
+      const storedResult = localStorage.getItem('liderandoIAResult');
+
+      if (storedAnswers) {
+        try {
+          const parsedAnswers = JSON.parse(storedAnswers);
+          if (Array.isArray(parsedAnswers) && parsedAnswers.length === questions.length) {
+            state.answers = parsedAnswers;
+            const firstUnanswered = parsedAnswers.findIndex(answer => !answer);
+            state.currentQuestion = firstUnanswered === -1 ? questions.length - 1 : firstUnanswered;
+          }
+        } catch (error) {
+          console.error('No se pudieron restaurar las respuestas.', error);
+        }
+      }
+
+      if (storedResult) {
+        try {
+          state.result = JSON.parse(storedResult);
+        } catch (error) {
+          console.error('No se pudo restaurar el resultado.', error);
+        }
+      }
+    }
+
+    function renderResult() {
+      if (!state.result) {
+        resultContent.innerHTML = `
+          <div class="card empty-state">
+            <h3>Aún no tienes resultado</h3>
+            <p>Primero necesitas completar el test. Cuando termines, aquí verás tu estilo predominante, tus fortalezas, tus riesgos y cómo usar mejor la IA según tu perfil.</p>
+            <button class="btn primary" id="goToTestBtn">Ir al test</button>
+          </div>
+        `;
+        document.getElementById('goToTestBtn').addEventListener('click', () => showPage('test'));
+        return;
+      }
+
+      const data = stylesContent[state.result.primary];
+      const secondaryName = stylesContent[state.result.secondary].name;
+      const maxScore = questions.length;
+
+      resultContent.innerHTML = `
+        <div class="result-hero">
+          <article class="result-card">
+            <div class="result-badge">${data.icon} Tu estilo predominante</div>
+            <h2 class="result-title">${data.name}</h2>
+            <p class="result-quote">${data.quote}</p>
+            <p class="small-muted" style="margin-top:16px;">Tu estilo secundario es <strong>${secondaryName}</strong>. Eso muestra que no eres una etiqueta fija, sino una combinación con fortalezas claras y también con puntos ciegos que vale la pena trabajar.</p>
+            <div class="pill-row">
+              <span class="pill">Autoconocimiento</span>
+              <span class="pill">Liderazgo</span>
+              <span class="pill">Decisión</span>
+              <span class="pill">IA aplicada</span>
+            </div>
+          </article>
+
+          <article class="result-card">
+            <h3 style="margin:0 0 12px;">Tu perfil en números</h3>
+            <div class="scores-grid">
+              ${Object.entries(state.result.counts).map(([style, score]) => `
+                <div class="score-row">
+                  <strong>${stylesContent[style].name}</strong>
+                  <div class="score-track">
+                    <div class="score-fill ${style}" style="width:${(score / maxScore) * 100}%"></div>
+                  </div>
+                  <strong>${score}</strong>
+                </div>
+              `).join('')}
+            </div>
+          </article>
+        </div>
+
+        <div class="result-grid">
+          <article class="result-card result-block">
+            <h4>Cómo eres como líder</h4>
+            <p>${data.summary}</p>
+          </article>
+
+          <article class="result-card result-block">
+            <h4>Fortalezas</h4>
+            <ul>
+              ${data.strengths.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+          </article>
+
+          <article class="result-card result-block">
+            <h4>Riesgos</h4>
+            <ul>
+              ${data.risks.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+          </article>
+
+          <article class="result-card result-block highlight">
+            <h4>Lo que más necesitas desarrollar</h4>
+            <p>${data.develop}</p>
+          </article>
+
+          <article class="result-card result-block">
+            <h4>Cómo usarías MAL la IA</h4>
+            <p>${data.aiBad}</p>
+          </article>
+
+          <article class="result-card result-block highlight">
+            <h4>Cómo deberías usarla MEJOR</h4>
+            <p>${data.aiGood}</p>
+          </article>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <div>
+              <h3>Prompts recomendados para ti</h3>
+              <p>Estos prompts están pensados para ayudarte a compensar tu punto ciego y a potenciar tu fortaleza.</p>
+            </div>
+          </div>
+          <div class="prompt-grid">
+            ${data.prompts.map((prompt, index) => `
+              <article class="prompt-card">
+                <h4>Prompt ${index + 1}</h4>
+                <code>${prompt}</code>
+              </article>
+            `).join('')}
+            <article class="prompt-card highlight">
+              <h4>${data.exerciseTitle}</h4>
+              <p>${data.exercise}</p>
+              <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn primary" id="goExercisesBtn">Ir a ejercicios</button>
+                <button class="btn secondary" id="restartTestBtn">Volver a hacer el test</button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="section">
+          <article class="info-card highlight">
+            <h4>Mensaje final para tu desarrollo</h4>
+            <p>No se trata de cambiar tu estilo. Se trata de volverlo más completo. Un líder que solo usa su fortaleza se vuelve predecible. Un líder que entrena su punto ciego se vuelve mucho más poderoso.</p>
+          </article>
+        </div>
+      `;
+
+      document.getElementById('goExercisesBtn').addEventListener('click', () => showPage('exercises'));
+      document.getElementById('restartTestBtn').addEventListener('click', () => {
+        resetTest();
+        showPage('test');
+      });
+    }
+
+    restoreState();
+    updateProgress();
+    renderQuestion();
+    renderResult();
+  </script>
+</body>
+</html>
+
+
